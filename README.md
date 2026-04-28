@@ -108,6 +108,9 @@ schema_config:
         prefix: index_
         period: 24h
 ```
+> ℹ️ **Note :** Ce projet a été réalisé avec Promtail (Loki 3.0.0).
+> Promtail est depuis déprécié au profit de **Grafana Alloy**.
+> 
 ### VM 3 – Apache Guacamole
 
 Installation manuelle suivant la documentation officielle Apache Guacamole :
