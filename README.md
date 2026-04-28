@@ -50,8 +50,8 @@
 | OpenCanary | Honeypot multi-protocoles | 0.6.x |
 | Apache HTTP | Service leurre (honeypot web) | 2.4 |
 | Nagios | Supervision d'infrastructure | 4.x |
-| Grafana | Visualisation des logs et métriques | 10.x |
-| Loki | Agrégateur de logs | 3.x |
+| Grafana | Visualisation des logs et métriques | 12.4.2 |
+| Loki | Agrégateur de logs | 3.0.0 |
 | Promtail | Agent de collecte de logs | 3.x |
 | Apache Guacamole | Portail d'accès distant (RDP/SSH/VNC) | 1.5.x |
 | Tomcat | Serveur d'application Java (Guacamole) | 9.x |
@@ -86,12 +86,14 @@ opencanaryd --start
 
 ### VM 2 – Stack Grafana + Loki
 
-```bash
-# Lancer la stack via Docker Compose
-docker compose up -d
-```
+Installation manuelle via `apt` et binaires officiels :
 
-> Voir [`grafana-loki/docker-compose.yml`](./grafana-loki/docker-compose.yml) pour la configuration complète.
+# Grafana
+sudo apt install -y grafana
+
+# Loki + Promtail (binaires GitHub releases)
+wget https://github.com/grafana/loki/releases/download/vX.X.X/loki-linux-amd64.zip
+wget https://github.com/grafana/loki/releases/download/vX.X.X/promtail-linux-amd64.zip
 
 **Point d'attention Loki v3 :** la syntaxe de configuration a changé par rapport aux versions antérieures. Le champ `schema_config` doit utiliser `tsdb` comme store :
 
@@ -106,19 +108,19 @@ schema_config:
         prefix: index_
         period: 24h
 ```
-
 ### VM 3 – Apache Guacamole
 
-```bash
-# Initialiser le schéma MySQL
-cat initdb.sql | docker exec -i mysql_container mysql -u root -p guacamole_db
+Installation manuelle suivant la documentation officielle Apache Guacamole :
+https://guacamole.apache.org/doc/gug/
 
-# Lancer Guacamole
-docker compose up -d
-```
+Composants installés via `apt` et compilation depuis les sources :
+- `libguac` + `guacd` (daemon de connexion)
+- `guacamole.war` déployé sur Tomcat 9
+- Extension `guacamole-auth-jdbc-mysql` pour l'authentification MySQL
 
-> Accès au portail : `http://[IP-VM]:8080/guacamole`  
-> Authentification MySQL activée (remplacement du provider par défaut).
+> Voir la documentation officielle pour le détail des étapes :
+> https://guacamole.apache.org/doc/gug/
+
 
 ---
 
